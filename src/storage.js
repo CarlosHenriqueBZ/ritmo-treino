@@ -1,0 +1,4 @@
+let db;
+export async function openStore(){return new Promise((resolve,reject)=>{const r=indexedDB.open('ritmo-personal',1);r.onupgradeneeded=()=>r.result.createObjectStore('app');r.onsuccess=()=>{db=r.result;resolve();};r.onerror=()=>reject(r.error);});}
+export async function readStore(){return new Promise((resolve,reject)=>{const r=db.transaction('app').objectStore('app').get('state');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+export async function writeStore(state){return new Promise((resolve,reject)=>{const t=db.transaction('app','readwrite');t.objectStore('app').put(structuredClone(state),'state');t.oncomplete=resolve;t.onerror=()=>reject(t.error);t.onabort=()=>reject(t.error);});}
