@@ -34,7 +34,7 @@ try{
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'test-results/mobile.png',fullPage:true});
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No horizontal overflow');
- await page.evaluate(()=>navigator.serviceWorker.ready);
+ await page.evaluate(()=>Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(Error('Service worker install timeout')),15000))]));
  await context.setOffline(true);
  await page.reload();
  await page.getByRole('heading',{name:/Vamos nessa, Carlos/}).waitFor();
