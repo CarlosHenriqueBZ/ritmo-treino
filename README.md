@@ -2,6 +2,16 @@
 
 App pessoal de treino em português, feito para celular, sem login ou servidor de dados. Fichas A/B/C transcritas dos PDFs, vídeos do treinador, registro de cargas e séries, cronômetro, descanso, histórico e gráfico semanal.
 
+## Diário alimentar
+
+Em **Meu perfil**, configure a chave OpenRouter uma vez. Em **Alimentação**, descreva a refeição e suas quantidades. A resposta estima calorias por alimento e salva no dia selecionado, com resumo diário e semanal também na visão geral e na evolução. É possível complementar o relato, corrigir calorias e excluir refeições. Dias sem registros não representam consumo zero. Consumo alimentar e gasto de treino não são usados para inferir déficit calórico.
+
+A chave fica em um registro separado no IndexedDB, fora do código, repositório e backups. As chamadas HTTPS vão diretamente do navegador ao OpenRouter, enviando apenas o relato daquela refeição. O provedor recebe o relato e a conta OpenRouter é cobrada conforme seu uso. Modelo padrão: `openai/gpt-4o-mini`, com JSON Schema, validação local, limite de resposta e timeout de 45 segundos. Não há chamada automática ao abrir o app nem repetição automática de pedidos pagos.
+
+Histórico alimentar funciona offline; novas estimativas exigem internet. Pedidos interrompidos ficam disponíveis para nova tentativa, sem calorias fictícias. Uma correção com erro preserva os valores anteriores. Backups antigos de treino continuam compatíveis; novos backups incluem o diário, sem a chave. A chave local não é criptografada e pode ser removida no perfil.
+
+`node tests/nutrition-browser.mjs` verifica o fluxo completo com respostas da API simuladas, sem gastar créditos. `node tests/browser.mjs` verifica a regressão do treino e cache offline. Ambos usam Chrome local e a versão compilada em `http://localhost:4173/` (ou `TEST_URL`). Nenhuma validação de inferência real é feita sem a chave do usuário.
+
 ## Desenvolvimento
 
 Node 22+. Execute `npm ci` e `npm run dev`. `npm test` verifica as regras de tempo, calorias, backups e fichas. `npm run build` gera `dist`.
