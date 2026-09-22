@@ -59,7 +59,7 @@ try{
   await expect(page.getByRole('button',{name:'Calcular e registrar',exact:true})).toBeEnabled();
   await expect(page.locator('[data-food-day-total]')).toHaveText('204 kcal');
   assert.ok(!(await page.locator('.user-message').innerText()).includes('200 g'));
-  mode='error';await send('uma banana');await page.getByText(/Saldo insuficiente/).waitFor();
+  mode='error';await send('uma banana');await page.locator('.assistant-message').getByText(/Saldo insuficiente/).waitFor();
   await expect(page.locator('[data-food-day-total]')).toHaveText('204 kcal');
   mode='success';await go('Tentar novamente');await page.getByText('Total estimado · salvo',{exact:true}).nth(1).waitFor();
   assert.equal(await page.locator('.meal-thread').count(),2);await expect(page.locator('[data-food-day-total]')).toHaveText('408 kcal');
